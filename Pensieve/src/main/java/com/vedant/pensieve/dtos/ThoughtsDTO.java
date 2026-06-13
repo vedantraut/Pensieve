@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotesDTO {
-	private int noteId;
-	private String noteTitle;
+public class ThoughtsDTO {
+	private int thoughtId;
+	private String thoughtTitle;
 	private String message;
 	private LocalDateTime createdOn;
 	private LocalDateTime modifiedOn;

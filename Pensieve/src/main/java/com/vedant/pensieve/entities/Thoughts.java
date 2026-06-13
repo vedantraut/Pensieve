@@ -13,11 +13,11 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Notes {
+public class Thoughts {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int noteId;
-	private String noteTitle;
+	private int thoughtId;
+	private String thoughtTitle;
 	private String message;
 	@CreationTimestamp
 	private LocalDateTime createdOn;
