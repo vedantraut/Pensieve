@@ -38,7 +38,11 @@ public class UserServiceImpl implements UserService {
 	public User addUser(UserDTO userdto) {
 		User user = new User();
 		
-		user.setName(userdto.getName());
+		if(userrepo.existsByEmail(userdto.getEmail())){
+			throw new IllegalArgumentException("Email is already registered");
+		}
+		
+		user.setName(userdto.getName());		
 		user.setEmail(userdto.getEmail());
 		user.setPassword(userdto.getPassword());
 		
