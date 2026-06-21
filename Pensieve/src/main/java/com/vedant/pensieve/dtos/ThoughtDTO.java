@@ -1,9 +1,6 @@
 package com.vedant.pensieve.dtos;
 
 import java.time.LocalDateTime;
-
-import com.vedant.pensieve.entities.User;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

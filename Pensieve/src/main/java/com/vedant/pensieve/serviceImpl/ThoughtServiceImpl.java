@@ -1,15 +1,14 @@
 package com.vedant.pensieve.serviceImpl;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.vedant.pensieve.dao.ThoughtRepo;
 import com.vedant.pensieve.dao.UserRepo;
 import com.vedant.pensieve.dtos.ThoughtDTO;
 import com.vedant.pensieve.entities.Thought;
 import com.vedant.pensieve.exception.ThoughtNotFoundException;
+import com.vedant.pensieve.exception.UserNotFoundException;
 import com.vedant.pensieve.service.ThoughtService;
 import jakarta.transaction.Transactional;
 
@@ -18,7 +17,6 @@ public class ThoughtServiceImpl implements ThoughtService {
 	ThoughtRepo ThoughtRepo;
 	UserRepo userRepo;
 	
-	@Autowired
 	public ThoughtServiceImpl(ThoughtRepo ThoughtRepo, UserRepo userRepo) {
 		this.ThoughtRepo = ThoughtRepo;
 		this.userRepo = userRepo;
@@ -56,10 +54,8 @@ public class ThoughtServiceImpl implements ThoughtService {
 		newThought.setThoughtTitle(thoughtdto.getThoughtTitle());
 		newThought.setMessage(thoughtdto.getMessage());
 		newThought.setUser(userRepo.findById(thoughtdto.getUserId()).orElseThrow(() -> 
-				new ThoughtNotFoundException("Thought is not found with id - "+thoughtdto.getThoughtId())));
+				new UserNotFoundException("User is not found with id - "+thoughtdto.getUserId())));
 		newThought.setTags(thoughtdto.getTags());
-		newThought.setCreatedOn(LocalDateTime.now());
-		newThought.setModifiedOn(LocalDateTime.now());
 		
 		ThoughtRepo.save(newThought);
 		
@@ -77,7 +73,6 @@ public class ThoughtServiceImpl implements ThoughtService {
 		existingThought.setUser(userRepo.findById(thoughtdto.getUserId()).orElseThrow(() -> 
 				new ThoughtNotFoundException("Thought is not found with id - "+thoughtdto.getThoughtId())));
 		existingThought.setTags(thoughtdto.getTags());
-		existingThought.setModifiedOn(LocalDateTime.now());
 
 		ThoughtRepo.save(existingThought);
 		
