@@ -14,18 +14,18 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ThoughtServiceImpl implements ThoughtService {
-	ThoughtRepo ThoughtRepo;
+	ThoughtRepo thoughtRepo;
 	UserRepo userRepo;
 	
-	public ThoughtServiceImpl(ThoughtRepo ThoughtRepo, UserRepo userRepo) {
-		this.ThoughtRepo = ThoughtRepo;
+	public ThoughtServiceImpl(ThoughtRepo thoughtRepo, UserRepo userRepo) {
+		this.thoughtRepo = thoughtRepo;
 		this.userRepo = userRepo;
 	}
 
 	@Override
 	@Transactional
 	public List<ThoughtDTO> fetchAllThought() {
-		List<Thought> allThought = ThoughtRepo.findAll();
+		List<Thought> allThought = thoughtRepo.findAll();
 		List<ThoughtDTO> dtoList = new ArrayList<>();
 		
 		for(Thought thought: allThought) {
@@ -57,7 +57,7 @@ public class ThoughtServiceImpl implements ThoughtService {
 				new UserNotFoundException("User is not found with id - "+thoughtdto.getUserId())));
 		newThought.setTags(thoughtdto.getTags());
 		
-		ThoughtRepo.save(newThought);
+		thoughtRepo.save(newThought);
 		
 		return newThought;
 	}
@@ -66,15 +66,14 @@ public class ThoughtServiceImpl implements ThoughtService {
 	@Transactional
 	public Thought updateThought(ThoughtDTO thoughtdto, long thoughtId) {
 		
-		Thought existingThought = ThoughtRepo.findById(thoughtId).orElseThrow(() -> new ThoughtNotFoundException("Thought is not found with id - "+thoughtdto.getThoughtId()));
+		Thought existingThought = thoughtRepo.findById(thoughtId).orElseThrow(() -> 
+			new ThoughtNotFoundException("Thought is not found with id - "+thoughtId));
 		
 		existingThought.setThoughtTitle(thoughtdto.getThoughtTitle());
 		existingThought.setMessage(thoughtdto.getMessage());
-		existingThought.setUser(userRepo.findById(thoughtdto.getUserId()).orElseThrow(() -> 
-				new ThoughtNotFoundException("Thought is not found with id - "+thoughtdto.getThoughtId())));
 		existingThought.setTags(thoughtdto.getTags());
 
-		ThoughtRepo.save(existingThought);
+		thoughtRepo.save(existingThought);
 		
 		return existingThought;
 	}
@@ -82,8 +81,9 @@ public class ThoughtServiceImpl implements ThoughtService {
 	@Override
 	@Transactional
 	public String deleteThought(long thoughtId) {
-		Thought existingThought = ThoughtRepo.findById(thoughtId).orElseThrow(() -> new ThoughtNotFoundException("Thought not found with id - " + thoughtId));
-		ThoughtRepo.delete(existingThought);
+		Thought existingThought = thoughtRepo.findById(thoughtId).orElseThrow(() -> 
+			new ThoughtNotFoundException("Thought not found with id - " + thoughtId));
+		thoughtRepo.delete(existingThought);
 		
 		return "Deleted Thought";
 	}
