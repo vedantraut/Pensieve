@@ -15,6 +15,8 @@ import com.vedant.pensieve.dtos.ThoughtDTO;
 import com.vedant.pensieve.entities.Thought;
 import com.vedant.pensieve.service.ThoughtService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/v1/thought/")
 public class ThoughtController {
@@ -32,14 +34,14 @@ public class ThoughtController {
 	}
 	
 	@PostMapping("")
-	public ResponseEntity<Thought> saveThought(@RequestBody ThoughtDTO thoughtdto){
+	public ResponseEntity<Thought> saveThought(@Valid @RequestBody ThoughtDTO thoughtdto){
 		Thought savedThought = thoughtService.addThought(thoughtdto);
 		
-		return ResponseEntity.ok(savedThought);
+		return ResponseEntity.status(201).body(savedThought);
 	}
 	
 	@PutMapping("{thoughtId}")
-	public ResponseEntity<Thought> updateThought(@RequestBody ThoughtDTO thoughtdto, @PathVariable long thoughtId){
+	public ResponseEntity<Thought> updateThought(@Valid @RequestBody ThoughtDTO thoughtdto, @PathVariable long thoughtId){
 		Thought updatedThought = thoughtService.updateThought(thoughtdto, thoughtId);
 		
 		return ResponseEntity.ok(updatedThought);
