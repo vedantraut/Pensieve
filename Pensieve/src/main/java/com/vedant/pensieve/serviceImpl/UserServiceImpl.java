@@ -2,6 +2,8 @@ package com.vedant.pensieve.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.vedant.pensieve.dao.UserRepo;
 import com.vedant.pensieve.dtos.UserDTO;
@@ -14,11 +16,12 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 	
-	UserRepo userrepo;
+	UserRepo userRepo;
+	PasswordEncoder passwordEncoder;
 
 	@Override
 	public List<UserDTO> fetchAllUsers() {
-		List<User> allUsers = userrepo.findAll();
+		List<User> allUsers = userRepo.findAll();
 		List<UserDTO> userdtoList = new ArrayList<>();
 		
 		for(User user: allUsers) {
@@ -26,7 +29,6 @@ public class UserServiceImpl implements UserService {
 			
 			userdto.setName(user.getName());
 			userdto.setEmail(user.getEmail());
-			userdto.setPassword(user.getPassword());
 			
 			userdtoList.add(userdto);
 		}
@@ -38,17 +40,16 @@ public class UserServiceImpl implements UserService {
 	public User addUser(UserDTO userdto) {
 		User user = new User();
 		
-		if(userrepo.existsByEmail(userdto.getEmail())){
+		if(userRepo.existsByEmail(userdto.getEmail())){
 			throw new IllegalArgumentException("Email is already registered");
 		}
 		
 		user.setName(userdto.getName());		
 		user.setEmail(userdto.getEmail());
-		user.setPassword(userdto.getPassword());
+		user.setPassword(passwordEncoder.encode(userdto.getPassword()));
+//		user.setPassword(userdto.getPassword());
 		
-		userrepo.save(user);
-		
-		return user;
+		return userRepo.save(user);
 	}
 
 }
